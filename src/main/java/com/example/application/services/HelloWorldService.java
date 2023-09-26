@@ -1,5 +1,6 @@
 package com.example.application.services;
 
+import com.example.application.model.Project;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.BrowserCallable;
 import org.springframework.stereotype.Service;
@@ -9,11 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class HelloWorldService {
 
-    public String sayHello(String name) {
-        if (name.isEmpty()) {
-            return "Hello stranger";
-        } else {
-            return "Hello " + name;
-        }
+    public Project getProject() {
+        return new Project();
     }
 }
