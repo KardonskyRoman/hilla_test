@@ -5,9 +5,6 @@ import "@vaadin/text-field";
 
 import { Binder, field } from "@hilla/form";
 
-import AddressModel from "Frontend/generated/com/example/application/model/AddressModel.js";
-import DeclarantModel from "Frontend/generated/com/example/application/model/DeclarantModel.js";
-import OrganizationModel from "Frontend/generated/com/example/application/model/OrganizationModel.js";
 import Project from "Frontend/generated/com/example/application/model/Project.js";
 import ProjectModel from "Frontend/generated/com/example/application/model/ProjectModel.js";
 import { View } from "../../views/view.js";
@@ -17,10 +14,7 @@ import { repeat } from "lit/directives/repeat.js";
 
 @customElement("hello-world-view")
 export class HelloWorldView extends View {
-  private binder = new Binder<Project, ProjectModel>(
-    this,
-    ProjectModel
-  );
+  private binder = new Binder<Project, ProjectModel>(this, ProjectModel);
 
   constructor() {
     super();
@@ -30,11 +24,6 @@ export class HelloWorldView extends View {
   private clearForm() {
     this.binder.clear();
     const project = ProjectModel.createEmptyValue();
-    const declarant = DeclarantModel.createEmptyValue();
-    declarant.organization = OrganizationModel.createEmptyValue();
-    declarant.organization.address = AddressModel.createEmptyValue();
-    declarant.organization.address.country = "";
-    project.declarants = [declarant];
     this.binder.read(project);
   }
 
@@ -51,12 +40,48 @@ export class HelloWorldView extends View {
             (declarant) => html`
               <vaadin-text-field
                 class="w-full"
-                label="Страна"
+                label="Country"
                 ...=${field(declarant.model.organization.address.country)}
               ></vaadin-text-field>
             `
           )
         : ""}
+      <vaadin-button
+        @click=${() => {
+          if (!this.binder.value.declarants) {
+            this.binder.value.declarants = [];
+          }
+          this.binder.for(this.binder.model.declarants).appendItem();
+          this.requestUpdate();
+        }}
+      >
+        Add declarant
+      </vaadin-button>
+      ${this.binder.value.cadastralNumber
+        ? repeat(
+            this.binder.model.cadastralNumber,
+            (cadastralNumber) => html` <vaadin-vertical-layout>
+              <vaadin-text-field
+                class="w-full"
+                required
+                label="Number"
+                ...=${field(cadastralNumber.model)}
+              ></vaadin-text-field>
+              </vaadin-vertical-layout>
+            `
+          )
+        : ""}
+      <vaadin-button
+        @click=${() => {
+          if (!this.binder.value.cadastralNumber) {
+            this.binder.value.cadastralNumber = [];
+          }
+          this.binder.for(this.binder.model.cadastralNumber).appendItem();
+          this.requestUpdate();
+        }}
+      >
+        Add number
+      </vaadin-button>
     `;
   }
 }
