@@ -7,7 +7,11 @@ public class Project {
 
     private List<Declarant> declarants;
 
-    protected List<String> cadastralNumber;
+    private List<String> cadastralNumber;
+
+    protected PreviousConclusions previousConclusions;
+
+    protected PreviousSimpleConclusions previousSimpleConclusions;
 
     public List<Declarant> getDeclarants() {
         if (declarants == null) {
@@ -23,4 +27,19 @@ public class Project {
         return this.cadastralNumber;
     }
 
+    public PreviousConclusions getPreviousConclusions() {
+        return previousConclusions;
+    }
+
+    public void setPreviousConclusions(PreviousConclusions value) {
+        this.previousConclusions = value;
+    }
+
+    public PreviousSimpleConclusions getPreviousSimpleConclusions() {
+        return previousSimpleConclusions;
+    }
+
+    public void setPreviousSimpleConclusions(PreviousSimpleConclusions value) {
+        this.previousSimpleConclusions = value;
+    }
 }
