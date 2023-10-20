@@ -87,69 +87,8 @@ export class HelloWorldView extends View {
         Add number
       </vaadin-button>
 
-      ${this.binder.value.previousConclusions?.previousConclusion
-        ? repeat(
-            this.binder.model.previousConclusions.previousConclusion,
-            (previousConclusion) => html` <vaadin-vertical-layout>
-              <vaadin-date-picker
-                required
-                label="Date 1"
-                ${field(previousConclusion.model.date)}
-              ></vaadin-date-picker>
-            </vaadin-vertical-layout>`
-          )
-        : ""}
-      <vaadin-button
-        @click=${() => {
-          if (!this.binder.value.previousConclusions) {
-            this.binder.value.previousConclusions =
-              PreviousConclusionsModel.createEmptyValue();
-            this.binder.value.previousConclusions.previousConclusion = [];
-          }
-          this.binder
-            .for(this.binder.model.previousConclusions.previousConclusion)
-            .appendItem();
-
-          this.requestUpdate();
-        }}
-      >
-        Add 1
-      </vaadin-button>
-
-      ${this.binder.value.previousSimpleConclusions?.previousSimpleConclusion
-        ? repeat(
-            this.binder.model.previousSimpleConclusions
-              .previousSimpleConclusion,
-            (previousSimpleConclusion) => html`
-              <vaadin-vertical-layout>
-                <vaadin-date-picker
-                  required
-                  label="Date 2"
-                  ${field(previousSimpleConclusion.model.date)}
-                ></vaadin-date-picker>
-              </vaadin-vertical-layout>
-            `
-          )
-        : ""}
-      <vaadin-button
-        @click=${() => {
-          if (!this.binder.value.previousSimpleConclusions) {
-            this.binder.value.previousSimpleConclusions =
-              PreviousSimpleConclusionsModel.createEmptyValue();
-            this.binder.value.previousSimpleConclusions.previousSimpleConclusion =
-              [];
-          }
-          this.binder
-            .for(
-              this.binder.model.previousSimpleConclusions
-                .previousSimpleConclusion
-            )
-            .appendItem();
-
-          this.requestUpdate();
-        }}
-      >
-        Add 2
+      <vaadin-button theme="tertiary" @click="${this.clearForm}">
+        Clear form
       </vaadin-button>
     `;
   }
