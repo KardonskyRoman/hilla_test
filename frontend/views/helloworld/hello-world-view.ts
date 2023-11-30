@@ -27,6 +27,7 @@ export class HelloWorldView extends View {
   private clearForm() {
     this.binder.clear();
     const project = ProjectModel.createEmptyValue();
+    project.cadastralNumber = ['1','2'];
     this.binder.read(project);
   }
 
@@ -51,9 +52,6 @@ export class HelloWorldView extends View {
         : ""}
       <vaadin-button
         @click=${() => {
-          if (!this.binder.value.declarants) {
-            this.binder.value.declarants = [];
-          }
           this.binder.for(this.binder.model.declarants).appendItem();
           this.requestUpdate();
         }}
