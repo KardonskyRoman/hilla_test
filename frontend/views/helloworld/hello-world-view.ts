@@ -3,91 +3,76 @@ import "@vaadin/notification";
 import "@vaadin/text-field";
 import "@vaadin/text-field";
 import "@vaadin/date-picker";
+import "@vaadin/grid";
+import "@vaadin/checkbox";
 
 import { Binder, field } from "@hilla/form";
+import {
+  Grid,
+  GridDataProviderCallback,
+  GridDataProviderParams,
+} from "@vaadin/grid";
+import { customElement, query, state } from "lit/decorators.js";
 
-import PreviousConclusionsModel from "Frontend/generated/com/example/application/model/PreviousConclusionsModel.js";
-import PreviousSimpleConclusionsModel from "Frontend/generated/com/example/application/model/PreviousSimpleConclusionsModel.js";
-import Project from "Frontend/generated/com/example/application/model/Project.js";
+import { DirectiveResult } from "lit/directive.js";
 import ProjectModel from "Frontend/generated/com/example/application/model/ProjectModel.js";
 import { View } from "../../views/view.js";
-import { customElement } from "lit/decorators.js";
+import { columnBodyRenderer } from "@vaadin/grid/lit.js";
 import { html } from "lit";
-import { repeat } from "lit/directives/repeat.js";
 
 @customElement("hello-world-view")
 export class HelloWorldView extends View {
-  private binder = new Binder<Project, ProjectModel>(this, ProjectModel);
 
-  constructor() {
-    super();
-    this.clearForm();
-  }
+  @state()
+  private items: Array<{ name: string; status: boolean }> = [
+    {
+      name: "John",
+      status: true,
+    },
+    {
+      name: "Mike",
+      status: true,
+    },
+  ];
 
-  private clearForm() {
-    this.binder.clear();
-    const project = ProjectModel.createEmptyValue();
-    project.cadastralNumber = ['1','2'];
-    this.binder.read(project);
-  }
+  @query("#grid")
+  private grid!: Grid;
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.classList.add("flex", "p-m", "gap-m", "items-end");
-  }
+  private gridDataProvider = this.dataProvider.bind(this);
 
   render() {
     return html`
-      ${this.binder.value?.declarants
-        ? repeat(
-            this.binder.model.declarants,
-            (declarant) => html`
-              <vaadin-text-field
-                class="w-full"
-                label="Country"
-                ...=${field(declarant.model.organization.address.country)}
-              ></vaadin-text-field>
-            `
-          )
-        : ""}
-      <vaadin-button
-        @click=${() => {
-          this.binder.for(this.binder.model.declarants).appendItem();
-          this.requestUpdate();
-        }}
-      >
-        Add declarant
-      </vaadin-button>
-      ${this.binder.value.cadastralNumber
-        ? repeat(
-            this.binder.model.cadastralNumber,
-            (cadastralNumber) => html`
-              <vaadin-vertical-layout>
-                <vaadin-text-field
-                  class="w-full"
-                  required
-                  label="Number"
-                  ...=${field(cadastralNumber.model)}
-                ></vaadin-text-field>
-              </vaadin-vertical-layout>
-            `
-          )
-        : ""}
-      <vaadin-button
-        @click=${() => {
-          if (!this.binder.value.cadastralNumber) {
-            this.binder.value.cadastralNumber = [];
-          }
-          this.binder.for(this.binder.model.cadastralNumber).appendItem();
-          this.requestUpdate();
-        }}
-      >
-        Add number
-      </vaadin-button>
-
-      <vaadin-button theme="tertiary" @click="${this.clearForm}">
-        Clear form
-      </vaadin-button>
+      <vaadin-grid id="grid" .dataProvider="${this.gridDataProvider}">
+        <vaadin-grid-column path="name"></vaadin-grid-column>
+        <vaadin-grid-column path="status"></vaadin-grid-column>
+        <vaadin-grid-column
+          header="Status"
+          ${columnBodyRenderer<Record<string, string | boolean>>(
+            (item) => html`
+              <vaadin-checkbox
+                .checked=${Boolean(item.status)}
+                @click=${async (e: MouseEvent) => {
+                  item.status = (e.target as HTMLInputElement).checked;
+                  this.grid.clearCache();
+                }}
+              >
+              </vaadin-checkbox>
+            `,
+            []
+          ) as DirectiveResult}
+        ></vaadin-grid-column>
+      </vaadin-grid>
     `;
+  }
+
+  async dataProvider(
+    params: GridDataProviderParams<any>,
+    callback: GridDataProviderCallback<any>
+  ) {
+    const result = this.items?.filter((item) => {
+      return item.status == true;
+    });
+    console.log({ result, grid: this.grid });
+    callback(result ?? [], result?.length);
   }
 }
