@@ -9,9 +9,27 @@ public class Project {
 
     private List<String> cadastralNumber;
 
-    protected PreviousConclusions previousConclusions;
+    String name;
 
-    protected PreviousSimpleConclusions previousSimpleConclusions;
+    private boolean status = true;
+
+    public Project(String name, boolean status){
+        this.name = name;
+        this.status = status;
+    }
+    
+    public String getName(){
+        return name;
+    }
+
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 
     public List<Declarant> getDeclarants() {
         if (declarants == null) {
@@ -25,21 +43,5 @@ public class Project {
             cadastralNumber = new ArrayList<String>();
         }
         return this.cadastralNumber;
-    }
-
-    public PreviousConclusions getPreviousConclusions() {
-        return previousConclusions;
-    }
-
-    public void setPreviousConclusions(PreviousConclusions value) {
-        this.previousConclusions = value;
-    }
-
-    public PreviousSimpleConclusions getPreviousSimpleConclusions() {
-        return previousSimpleConclusions;
-    }
-
-    public void setPreviousSimpleConclusions(PreviousSimpleConclusions value) {
-        this.previousSimpleConclusions = value;
     }
 }
